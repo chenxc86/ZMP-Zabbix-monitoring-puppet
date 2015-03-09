@@ -48,10 +48,10 @@ class PUPPET_MONITOR(object):
         """
         for proc in psutil.process_iter():
             try:
-                pinfo = proc.as_dict(attrs=['pid', 'name'])
+                pinfo = proc.as_dict(attrs=['pid', 'cmdline'])
             except psutil.NoSuchProcess:
                 pass
-            if cls.process_name in pinfo.get("name"):
+            if cls.process_name in " ".join(pinfo.get('cmdline')):
                 return cls()
         print "%(process_name)s process does not start." % {"process_name": cls.process_name}
 
@@ -62,7 +62,7 @@ class PUPPET_MONITOR(object):
         current_date = int(time.time())
         time_diff = current_date - self.last_sync_successful_date
         if time_diff > self.max_time:
-            print "Timeouts,Synchronization failure."
+            print "Error,Synchronization failure."
         else:
             print "0"
 
